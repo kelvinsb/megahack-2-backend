@@ -31,6 +31,7 @@ Route.post('login', 'UsuarioController.login')
 
 Route.get('cartoes', 'CartoeController.index');
 Route.post('cartoes', 'CartoeController.store');
+
 Route.get('cartoes/:usuario_id', 'CartoeController.show');
 Route.get('interesses', 'InteresseController.index');
 Route.get('interesses/:usuario_id', 'UsuarioInteressController.index');
