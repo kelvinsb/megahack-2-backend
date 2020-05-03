@@ -29,6 +29,7 @@ Route.resource('tipos-usuarios', 'TiposUsuarioController')
 
 Route.post('login', 'UsuarioController.login')
 
+Route.get('cartoes/:usuario_id', 'CartoeController.show');
 Route.get('interesses', 'InteresseController.index');
 Route.get('interesses/:usuario_id', 'UsuarioInteressController.index');
 Route.post('interesses/:usuario_id', 'UsuarioInteressController.store');
