@@ -1,5 +1,7 @@
 'use strict'
 
+const Cartoes = use('App/Models/Cartoe')
+const Database = use('Database')
 /** @typedef {import('@adonisjs/framework/src/Request')} Request */
 /** @typedef {import('@adonisjs/framework/src/Response')} Response */
 /** @typedef {import('@adonisjs/framework/src/View')} View */
@@ -18,6 +20,11 @@ class CartoeController {
    * @param {View} ctx.view
    */
   async index ({ request, response, view }) {
+    
+    const cartoes = Cartoes
+      .query()
+      .fetch()
+    return cartoes
   }
 
   /**
@@ -41,6 +48,40 @@ class CartoeController {
    * @param {Response} ctx.response
    */
   async store ({ request, response }) {
+    try {
+      const {
+        body: {
+          ocupacao = null,
+          descricao = null,
+          telefone = null,
+          linkedin = null,
+          email = null,
+          usuario_id: usuarioId = null,
+        },
+      } = request;
+      const jaExiste = await Database
+        .table('cartoes')
+        .select(['id'])
+        .where('usuario_id', usuarioId)
+      if (jaExiste.length > 0) {
+        return response.status(409).json({})
+      }
+      const tipo = await Database
+        .table('cartoes')
+        .insert({
+          ocupacao,
+          descricao,
+          telefone,
+          linkedin,
+          email,
+          usuario_id: usuarioId,
+          created_at: Database.fn.now(),
+          updated_at: Database.fn.now(),
+        })
+      return response.status(201).json({})
+    } catch (err) {
+      return response.status(404).json({})
+  }
   }
 
   /**
@@ -53,6 +94,7 @@ class CartoeController {
    * @param {View} ctx.view
    */
   async show ({ params, request, response, view }) {
+    try {
     const {
       usuario_id: usuarioId,
     } = request.params;
@@ -74,6 +116,9 @@ class CartoeController {
           builder.on('usr.id', usuarioId)
         })
       return response.status(200).json(query.first())
+    } catch(err) {
+      return response.status(404).json({})
+    }
   }
 
   /**
