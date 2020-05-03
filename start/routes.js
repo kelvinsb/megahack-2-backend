@@ -16,6 +16,28 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use('Route')
 
+Route.resource('usuarios', 'UsuarioController')
+  .only(['store'])
+  .apiOnly()
+  .validator(new Map([
+    [['usuarios.store'], ['StoreUsuario']],
+  ]))
+
+Route.resource('tipos-usuarios', 'TiposUsuarioController')
+  .only(['index'])
+  .apiOnly()
+
+Route.post('login', 'UsuarioController.login')
+
+Route.get('interesses', 'InteresseController.index');
+Route.get('interesses/:usuario_id', 'UsuarioInteressController.index');
+Route.post('interesses/:usuario_id', 'UsuarioInteressController.store');
+Route.get('tipo-networking', 'TipoNetworkingController.index');
+Route.get('tipo-networking/:usuario_id', 'UsuarioTipoNetworkingController.index');
+Route.post('tipo-networking/:usuario_id', 'UsuarioTipoNetworkingController.store');
+Route.post('organizacoes', 'OrganizacoeController.store');
+Route.post('eventos', 'EventoController.store');
+
 Route.get('/', () => {
-  return { greeting: 'Hello world in JSON' }
+  return { greeting: 'Hello worl\d in JSON' }
 })
