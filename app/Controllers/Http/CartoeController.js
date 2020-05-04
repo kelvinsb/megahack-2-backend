@@ -60,7 +60,7 @@ class CartoeController {
           {
             mapId: 'mapa',
             idProperty: 'id',
-            properties: ['nome', 'ocupacao', 'descricao', 'telefone', 'linkedin', 'email'],
+            properties: ['nome', 'usuario_id', 'ocupacao', 'descricao', 'telefone', 'linkedin', 'email'],
             collections: [
               {
                 name: 'interesses',
@@ -203,7 +203,7 @@ class CartoeController {
           {
             mapId: 'mapa',
             idProperty: 'id',
-            properties: ['nome', 'ocupacao', 'descricao', 'telefone', 'linkedin', 'email'],
+            properties: ['nome', 'usuario_id', 'ocupacao', 'descricao', 'telefone', 'linkedin', 'email'],
             collections: [
               {
                 name: 'interesses',
