@@ -25,6 +25,7 @@ class CartoeController {
         cart: 'cartoes',
       })
         .select({
+          id: 'cart.id',
           nome: 'usr.nome',
           tipo_networking_id: 'tp.id',
           tipo_networking_nome: 'tp.nome',
@@ -158,7 +159,6 @@ class CartoeController {
    * @param {View} ctx.view
    */
   async show ({ params, request, response, view }) {
-    try {
     const {
       usuario_id: usuarioId,
     } = request.params;
@@ -167,7 +167,12 @@ class CartoeController {
         cart: 'cartoes',
       })
         .select({
+          id: 'cart.id',
           nome: 'usr.nome',
+          tipo_networking_id: 'tp.id',
+          tipo_networking_nome: 'tp.nome',
+          interesses_id: 'int.id',
+          interesses_nome: 'int.nome',
           ocupacao: 'cart.ocupacao',
           descricao: 'cart.descricao',
           telefone: 'cart.telefone',
@@ -178,18 +183,51 @@ class CartoeController {
           usr: 'usuarios',
         }, builder => {
           builder.on('cart.usuario_id', 'usr.id')
-          builder.on('usr.id', usuarioId)
+          builder.on('usr.id', Database.raw(usuarioId))
         })
-        .innerJoin({
-          utn: 'utn.usuario_id',
+        .leftJoin({
+          utn: 'usuario_tipo_networkings',
         }, 'usr.id', 'utn.usuario_id')
-        .innerJoin({
-          tp: 'tp.nome',
+        .leftJoin({
+          tp: 'tipo_networkings',
         }, 'tp.id', 'utn.tipo_networking_id')
-      return response.status(200).json(query.first())
-    } catch(err) {
-      return response.status(404).json({})
-    }
+        .leftJoin({
+          ui: 'usuario_interesses',
+        }, 'ui.usuario_id', 'usr.id')
+        .leftJoin({
+          int: 'interesses',
+        }, 'int.id', 'ui.interesse_id')
+        const resultMaps = [
+          {
+            mapId: 'mapa',
+            idProperty: 'id',
+            properties: ['nome', 'ocupacao', 'descricao', 'telefone', 'linkedin', 'email'],
+            collections: [
+              {
+                name: 'interesses',
+                mapId: 'interessesMap',
+                columnPrefix: 'interesses_'
+              },
+              {
+                name: 'tipo_networking',
+                mapId: 'tipo_netowrkingMap',
+                columnPrefix: 'tipo_networking_'
+              },
+            ]
+          },
+              {
+                mapId: 'interessesMap',
+                idProperty: 'id',
+                properties: ['nome'],
+              },
+              {
+                mapId: 'tipo_netowrkingMap',
+                idProperty: 'id',
+                properties: ['nome'],
+              }
+        ]
+        const saida = joinjs.map(query, resultMaps, 'mapa', '');
+      return response.status(200).json(saida)
   }
 
   /**
