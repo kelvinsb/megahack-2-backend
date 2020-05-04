@@ -27,6 +27,7 @@ class CartoeController {
         .select({
           id: 'cart.id',
           nome: 'usr.nome',
+          usuario_id: 'usr.id',
           tipo_networking_id: 'tp.id',
           tipo_networking_nome: 'tp.nome',
           interesses_id: 'int.id',
@@ -169,6 +170,7 @@ class CartoeController {
         .select({
           id: 'cart.id',
           nome: 'usr.nome',
+          usuario_id: 'usr.id',
           tipo_networking_id: 'tp.id',
           tipo_networking_nome: 'tp.nome',
           interesses_id: 'int.id',
